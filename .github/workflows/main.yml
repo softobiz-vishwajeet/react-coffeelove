@@ -1,0 +1,28 @@
+name: Mirror to CodeCommit
+
+on:
+  push:
+    branches:
+      - main  # Adjust this based on your repository's branch structure
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Configure AWS CLI
+      run: |
+        aws configure set aws_access_key_id AKIAZMKFPOEN2LXJLTVS
+        aws configure set aws_secret_access_key gvM/teVKPh/zgUb0wwhJMnaau5jY1TiGneRGIb26
+        aws configure set region ap-south-1
+
+    - name: Mirror to CodeCommit
+      run: |
+        # Replace <REPO_URL> with your CodeCommit repository URL
+        git clone https://github.com/softobiz-vishwajeet/react-coffeelove.git
+        cd your-github-repo
+        git remote add codecommit https://git-codecommit.ap-south-1.amazonaws.com/v1/repos/poc-repo
+        git push --mirror codecommit
