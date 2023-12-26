@@ -35,15 +35,37 @@ jobs:
       # run: amplify init --appId ${{ secrets.AMPLIFY_APP_ID }} --envName prod
 
 
-    - name: Configure Amplify
-      uses: ambientlight/amplify-cli-action@0.3.0
-      with:
-        amplify_command: bash #configure
-        amplify_env: prod
-      env:
-        AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                          #${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: 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  #${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ap-south-1                                           #${{ secrets.AWS_REGION }} 
+    # - name: Configure Amplify
+    #   uses: ambientlight/amplify-cli-action@0.3.0
+    #   with:
+    #     amplify_command: bash #configure
+    #     amplify_env: prod
+    #   env:
+    #     AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                          #${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     AWS_SECRET_ACCESS_KEY: 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  #${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     AWS_REGION: ap-south-1                                           #${{ secrets.AWS_REGION }} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # - name: amplify-cli-action
     #   # You may pin to the exact commit or the version.
