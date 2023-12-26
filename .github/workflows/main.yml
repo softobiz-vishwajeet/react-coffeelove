@@ -60,7 +60,7 @@ jobs:
       run: |
         ls -la
         cd amplify
-        ls -la
+        ls -lRa
         #amplify publish
       env:
         AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                             #${{ secrets.AWS_ACCESS_KEY_ID }}
