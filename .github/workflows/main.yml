@@ -36,9 +36,13 @@ jobs:
 
     - name: Execute Custom Commands
       run: |
+        npm install -g npm-check-updates
+        ncu -u
         npm install
         npm run build
-        echo "Custom commands before Amplify"
+        # npm install
+        # npm run build
+        # echo "Custom commands before Amplify"
 
     - name: Configure Amplify
       run: amplify configure
