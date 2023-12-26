@@ -22,6 +22,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Install Amplify CLI
+      run: npm install -g @aws-amplify/cli
+
+
     - name: Initialize Amplify
       run: amplify init --appId d1m8t2tw7g1zgy --envName prod
       env:
