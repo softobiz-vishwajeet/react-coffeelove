@@ -34,6 +34,31 @@ jobs:
         AWS_REGION: ap-south-1                                          # ${{ secrets.AWS_REGION }}
       # run: amplify init --appId ${{ secrets.AMPLIFY_APP_ID }} --envName prod
 
+    - name: Execute Custom Commands
+      run: |
+        npm install
+        npm run build
+        echo "Custom commands before Amplify"
+
+    - name: Configure Amplify
+      run: amplify configure
+      env:
+        AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                             #${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: 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    #${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ap-south-1                                             #${{ secrets.AWS_REGION }}
+
+    - name: Execute Additional Custom Commands
+      run: |
+        echo "Custom commands after Amplify"
+    
+    - name: Deploy with Amplify
+      run: amplify publish
+      env:
+        AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                             #${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: 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    #${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ap-south-1                                             #${{ secrets.AWS_REGION }}
+
+
 
     # - name: Configure Amplify
     #   uses: ambientlight/amplify-cli-action@0.3.0
