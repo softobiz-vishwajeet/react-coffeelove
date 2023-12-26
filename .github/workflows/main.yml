@@ -23,6 +23,6 @@ jobs:
       run: |
         # Replace <REPO_URL> with your CodeCommit repository URL
         git clone https://github.com/softobiz-vishwajeet/react-coffeelove.git
-        cd your-github-repo
+        cd react-coffeelove
         git remote add codecommit https://git-codecommit.ap-south-1.amazonaws.com/v1/repos/poc-repo
         git push --mirror codecommit
