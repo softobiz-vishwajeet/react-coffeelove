@@ -38,7 +38,7 @@ jobs:
         # a build command to run with amplify publish (to build front-end deployment artifacts)
         build_command: npm run build      # optional, default is npm run build
         # amplify environment to use
-        #amplify_env: 
+        amplify_env: prod
         # amplify command: SUPPORTED: [configure, push, publish, status, add_env, delete_env]
         amplify_command: configure
         # version of amplify/cli used
@@ -51,6 +51,20 @@ jobs:
         AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                           #${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: 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    # ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: ap-south-1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # - name: configure amplify
     #   uses: ambientlight/amplify-cli-action@0.3.0
