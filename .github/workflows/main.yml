@@ -39,7 +39,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install
+          npm install -g npm@latest
           # sudo npm cache clean -f
           # sudo npm install -g n
           # sudo n latest
