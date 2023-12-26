@@ -18,13 +18,13 @@ jobs:
 
     - name: Mirror repository
       run: |
-        git clone --mirror https://${{ secrets.AZURE_GIT_USERNAME }}@${{ secrets.AZURE_REPO_URL }} repo-mirror
+        git clone --mirror https://github.com/softobiz-vishwajeet/react-coffeelove.git repo-mirror
         cd repo-mirror
         git remote set-url --push origin https://${{ secrets.AWS_GIT_USERNAME }}:${{ secrets.AWS_GIT_PASSWORD }}@${{ secrets.AWS_REPO_URL }}
         git push --mirror origin
       env:
-        AZURE_REPO_URL: github.com/softobiz-vishwajeet/react-coffeelove.git   #${{ secrets.AZURE_REPO_URL }}
-        AZURE_GIT_USERNAME: softobiz-vishwajeet                             # ${{ secrets.AZURE_GIT_USERNAME }}
+        #AZURE_REPO_URL: github.com/softobiz-vishwajeet/react-coffeelove.git   #${{ secrets.AZURE_REPO_URL }}
+        #AZURE_GIT_USERNAME: softobiz-vishwajeet                             # ${{ secrets.AZURE_GIT_USERNAME }}
         #AZURE_GIT_PASSWORD: ${{ secrets.AZURE_GIT_PASSWORD }}
         AWS_REPO_URL: git-codecommit.ap-south-1.amazonaws.com/v1/repos/poc-repo #${{ secrets.AWS_REPO_URL }}
         AWS_GIT_USERNAME: test-user-at-644927680795                      #${{ secrets.AWS_GIT_USERNAME }}
@@ -32,3 +32,6 @@ jobs:
 
 
 
+#https://github.com/softobiz-vishwajeet/react-coffeelove.git
+
+#https://${{ secrets.AZURE_GIT_USERNAME }}@${{ secrets.AZURE_REPO_URL }} repo-mirror
