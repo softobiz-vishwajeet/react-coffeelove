@@ -15,8 +15,8 @@ jobs:
       # with:
           # fetch-depth: 0
 
-    - name: Install required packages
-      run: sudo apt-get install -y gridsite-clients
+    # - name: Install required packages
+    #   run: sudo apt-get install -y gridsite-clients
       
     - name: Mirror repository
       run: |
