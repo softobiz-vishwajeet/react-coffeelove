@@ -25,6 +25,13 @@ jobs:
     - name: Install Amplify CLI
       run: npm install -g @aws-amplify/cli
 
+    - name: Configure Amplify
+      run: |
+        amplify configure
+      env:
+        AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                             #${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: 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    #${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ap-south-1 
 
     - name: Initialize Amplify
       run: amplify pull --appId d1m8t2tw7g1zgy --envName prod
@@ -44,13 +51,13 @@ jobs:
         # npm run build
         # echo "Custom commands before Amplify"
 
-    - name: Configure Amplify
-      run: |
-        amplify configure
-      env:
-        AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                             #${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: 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    #${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ap-south-1                                             #${{ secrets.AWS_REGION }}
+    # - name: Configure Amplify
+    #   run: |
+    #     amplify configure
+    #   env:
+    #     AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                             #${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     AWS_SECRET_ACCESS_KEY: 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    #${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     AWS_REGION: ap-south-1                                             #${{ secrets.AWS_REGION }}
 
     - name: Execute Additional Custom Commands
       run: |
