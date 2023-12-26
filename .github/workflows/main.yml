@@ -1,4 +1,4 @@
-name: Mirror GitHub to CodeCommit
+name: Deploy to AWS Amplify
 
 on:
   push:
@@ -6,47 +6,47 @@ on:
       - main
 
 jobs:
-  mirror:
+  test:
+    name: test amplify-cli-action
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [18.x]
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      # with:
-          # fetch-depth: 0
+    - uses: actions/checkout@v1
 
-    # - name: Install required packages
-    #   run: sudo apt-get install -y gridsite-clients
-      
-    - name: Mirror repository
-      run: |
-        git clone --mirror https://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@github.com/softobiz-vishwajeet/react-coffeelove.git repo-mirror
-        cd repo-mirror
-        git remote set-url --push origin https://${{ secrets.AWS_GIT_USERNAME }}:${{ secrets.AWS_GIT_PASSWORD }}@${{ secrets.AWS_REPO_URL }}
-        git push --mirror origin
+    - name: use node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: configure amplify
+      uses: ambientlight/amplify-cli-action@0.3.0
+      with:
+        amplify_command: configure
+        amplify_env: prod
       env:
-        AWS_REPO_URL: git-codecommit.ap-south-1.amazonaws.com/v1/repos/poc-repo
-        AWS_GIT_USERNAME: test-user-at-644927680795
-        AWS_GIT_PASSWORD: ${{ secrets.AWS_GIT_PASSWORD }}
+        AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                           #${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: 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    # ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ap-south-1
 
-##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
-## git clone --mirror https://${{ secrets.GITHUB_TOKEN }}@github.com/softobiz-vishwajeet/react-coffeelove.git repo-mirror
-    # - name: Mirror repository
-    #   run: |
-    #     git clone --mirror https://github.com/softobiz-vishwajeet/react-coffeelove repo-mirror
-    #     cd repo-mirror
-    #     git remote set-url --push origin https://${{ secrets.AWS_GIT_USERNAME }}:${{ secrets.AWS_GIT_PASSWORD }}@${{ secrets.AWS_REPO_URL }}
-    #     git push --mirror origin
-    #   env:
-    #     #AZURE_REPO_URL: github.com/softobiz-vishwajeet/react-coffeelove.git   #${{ secrets.AZURE_REPO_URL }}
-    #     #AZURE_GIT_USERNAME: softobiz-vishwajeet                             # ${{ secrets.AZURE_GIT_USERNAME }}
-    #     #AZURE_GIT_PASSWORD: ${{ secrets.AZURE_GIT_PASSWORD }}
-    #     AWS_REPO_URL: git-codecommit.ap-south-1.amazonaws.com/v1/repos/poc-repo #${{ secrets.AWS_REPO_URL }}
-    #     AWS_GIT_USERNAME: test-user-at-644927680795                      #${{ secrets.AWS_GIT_USERNAME }}
-    #     AWS_GIT_PASSWORD: G2XMvO2t4AhgtGRk7O2t0FfV6mNCgGm6wG8O5ehO6qk=  #${{ secrets.AWS_GIT_PASSWORD }}
-
-
-
-#https://github.com/softobiz-vishwajeet/react-coffeelove.git
-
-#https://${{ secrets.AZURE_GIT_USERNAME }}@${{ secrets.AZURE_REPO_URL }} repo-mirror
+    - name: install, build and test
+      run: |
+        npm install
+        npm run build
+        # build and test
+        # npm run build
+        # npm run test
+    
+    - name: deploy
+      uses: ambientlight/amplify-cli-action@0.3.0
+      with:
+        amplify_command: publish
+        amplify_env: prod
+      env:
+        AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                              #${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: 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     #${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ap-south-1
+    
