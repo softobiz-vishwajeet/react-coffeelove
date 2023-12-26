@@ -12,16 +12,21 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+          fetch-depth: 0
 
     - name: Install required packages
       run: sudo apt-get install -y gridsite-clients
+      
 
     - name: Mirror repository
       run: |
-        git clone --mirror https://github.com/softobiz-vishwajeet/react-coffeelove.git repo-mirror
-        cd repo-mirror
         git remote set-url --push origin https://${{ secrets.AWS_GIT_USERNAME }}:${{ secrets.AWS_GIT_PASSWORD }}@${{ secrets.AWS_REPO_URL }}
         git push --mirror origin
+        # git clone --mirror https://github.com/softobiz-vishwajeet/react-coffeelove.git repo-mirror
+        # cd repo-mirror
+        # git remote set-url --push origin https://${{ secrets.AWS_GIT_USERNAME }}:${{ secrets.AWS_GIT_PASSWORD }}@${{ secrets.AWS_REPO_URL }}
+        # git push --mirror origin
       env:
         #AZURE_REPO_URL: github.com/softobiz-vishwajeet/react-coffeelove.git   #${{ secrets.AZURE_REPO_URL }}
         #AZURE_GIT_USERNAME: softobiz-vishwajeet                             # ${{ secrets.AZURE_GIT_USERNAME }}
