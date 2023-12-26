@@ -1,90 +1,147 @@
-name: Deploy to AWS Amplify
+name: DEPLOYMENT
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
-    name: Deploy to AWS Amplify
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [18.x]  # You may adjust the Node.js version as needed
 
     steps:
-    - uses: actions/checkout@v1
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-    - name: use node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+           ${{ runner.os }}-node-
 
-    - name: Install Amplify CLI
-      run: npm install -g @aws-amplify/cli
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Configure Amplify
-      run: |
-        amplify configure
-      env:
-        AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                             #${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: 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    #${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ap-south-1 
+      - name: Install Dependencies
+        run: npm install
 
-    - name: Initialize Amplify
-      run: amplify pull --appId d1m8t2tw7g1zgy --envName prod
-      env:
-        AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                           #${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: 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   #${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ap-south-1                                          # ${{ secrets.AWS_REGION }}
-      # run: amplify init --appId ${{ secrets.AMPLIFY_APP_ID }} --envName prod
+      - name: Build Amplify App
+        run: npm run build
 
-    - name: Execute Custom Commands
-      run: |
-        npm install -g npm-check-updates
-        ncu -u
-        npm install
-        npm run build
-        # npm install
-        # npm run build
-        # echo "Custom commands before Amplify"
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: AKIAZMKFPOEN2LXJLTVS
+          aws-secret-access-key: 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
+          aws-region: ap-south-1 
 
-    # - name: Configure Amplify
-    #   run: |
-    #     amplify configure
-    #   env:
-    #     AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                             #${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     AWS_SECRET_ACCESS_KEY: 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    #${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     AWS_REGION: ap-south-1                                             #${{ secrets.AWS_REGION }}
+      - name: Configure Amplify CLI
+        run: npm install -g @aws-amplify/cli  # Corrected the installation command
 
-    - name: Execute Additional Custom Commands
-      run: |
-        echo "Custom commands after Amplify"
+      - name: Initialize Amplify Environment
+        run: amplify init --app git@github.com:softobiz-vishwajeet/react-coffeelove.git --yes
+             #amplify init --app git@github.com:myGHUSER/myAPP.git --yes
+
+      - name: Deploy to Amplify
+        run: amplify publish --yes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# name: Deploy to AWS Amplify
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     name: Deploy to AWS Amplify
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       matrix:
+#         node-version: [18.x]
+
+#     steps:
+#     - uses: actions/checkout@v1
+
+#     - name: use node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#         node-version: ${{ matrix.node-version }}
+
+#     - name: Install Amplify CLI
+#       run: npm install -g @aws-amplify/cli
+
+#     - name: Configure Amplify
+#       run: |
+#         amplify configure
+#       env:
+#         AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                             #${{ secrets.AWS_ACCESS_KEY_ID }}
+#         AWS_SECRET_ACCESS_KEY: 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    #${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         AWS_REGION: ap-south-1 
+
+#     - name: Initialize Amplify
+#       run: amplify pull --appId d1m8t2tw7g1zgy --envName prod
+#       env:
+#         AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                           #${{ secrets.AWS_ACCESS_KEY_ID }}
+#         AWS_SECRET_ACCESS_KEY: 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   #${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         AWS_REGION: ap-south-1                                          # ${{ secrets.AWS_REGION }}
+#       # run: amplify init --appId ${{ secrets.AMPLIFY_APP_ID }} --envName prod
+
+#     - name: Execute Custom Commands
+#       run: |
+#         npm install -g npm-check-updates
+#         ncu -u
+#         npm install
+#         npm run build
+#         # npm install
+#         # npm run build
+#         # echo "Custom commands before Amplify"
+
+#     - name: Execute Additional Custom Commands
+#       run: |
+#         echo "Custom commands after Amplify"
     
-    - name: Deploy with Amplify
-      run: |
-        ls -la
-        cd amplify
-        ls -lRa
-        amplify publish
-      env:
-        AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                             #${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: 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    #${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ap-south-1                                             #${{ secrets.AWS_REGION }}
-
-
-
-    # - name: Configure Amplify
-    #   uses: ambientlight/amplify-cli-action@0.3.0
-    #   with:
-    #     amplify_command: bash #configure
-    #     amplify_env: prod
-    #   env:
-    #     AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                          #${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     AWS_SECRET_ACCESS_KEY: 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  #${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     AWS_REGION: ap-south-1                                           #${{ secrets.AWS_REGION }} 
+#     - name: Deploy with Amplify
+#       run: |
+#         ls -la
+#         cd amplify
+#         ls -lRa
+#         amplify publish
+#       env:
+#         AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                             #${{ secrets.AWS_ACCESS_KEY_ID }}
+#         AWS_SECRET_ACCESS_KEY: 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    #${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         AWS_REGION: ap-south-1                                             #${{ secrets.AWS_REGION }}
 
 
 
@@ -108,74 +165,9 @@ jobs:
 
 
 
-    # - name: amplify-cli-action
-    #   # You may pin to the exact commit or the version.
-    #   # uses: ambientlight/amplify-cli-action@f162bafe0699070d85092b4b00be05f082c8b62d
-    #   uses: ambientlight/amplify-cli-action@0.3.0
-    #   with:
-    #     # the root project directory: use it if you amplify project is not this repo root directory
-    #     #project_dir: # optional
-    #     # front-end source location where aws_exports.js will be generated
-    #     source_dir: src                   # optional, default is src
-    #     # front-end artifacts deployment directory that gets uploaded to S3 during amplify publish
-    #     distribution_dir: dist            # optional, default is dist
-    #     # a build command to run with amplify publish (to build front-end deployment artifacts)
-    #     build_command: npm run build      # optional, default is npm run build
-    #     # amplify environment to use
-    #     amplify_env: prod
-    #     # amplify command: SUPPORTED: [configure, push, publish, status, add_env, delete_env]
-    #     amplify_command: configure
-    #     # version of amplify/cli used
-    #     #amplify_cli_version: # optional
-    #     # deletion protection: explicitly set this to false if you want amplify delete to work
-    #     delete_lock: true                  # optional, default is true
-    #     # additional arguments to pass to ampify_command defined command
-    #     #amplify_arguments: # optional, default is 
-    #   env:
-    #     AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                           #${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     AWS_SECRET_ACCESS_KEY: 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    # ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     AWS_REGION: ap-south-1
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-    # - name: configure amplify
-    #   uses: ambientlight/amplify-cli-action@0.3.0
-    #   with:
-    #     amplify_command: configure
-    #     amplify_env: prod
-    #   env:
-    #     AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                           #${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     AWS_SECRET_ACCESS_KEY: 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    # ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     AWS_REGION: ap-south-1
-
-    # - name: install, build and test
-    #   run: |
-    #     npm install
-    #     #npm run build
-    #     #npm run test
-    #     # build and test
-    #     # npm run build
-    #     # npm run test
-    
-    # - name: deploy
-    #   uses: ambientlight/amplify-cli-action@0.3.0
-    #   with:
-    #     amplify_command: publish
-    #     amplify_env: prod
-    #   env:
-    #     AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                              #${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     AWS_SECRET_ACCESS_KEY: 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     #${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     AWS_REGION: ap-south-1
     
