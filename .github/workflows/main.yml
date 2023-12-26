@@ -45,7 +45,9 @@ jobs:
         # echo "Custom commands before Amplify"
 
     - name: Configure Amplify
-      run: amplify configure
+      run: |
+        ls -la
+        #amplify configure
       env:
         AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                             #${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: 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    #${{ secrets.AWS_SECRET_ACCESS_KEY }}
