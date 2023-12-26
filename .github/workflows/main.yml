@@ -27,7 +27,7 @@ jobs:
 
 
     - name: Initialize Amplify
-      run: amplify init --appId d1m8t2tw7g1zgy --envName prod
+      run: amplify pull --appId d1m8t2tw7g1zgy --envName prod
       env:
         AWS_ACCESS_KEY_ID: AKIAZMKFPOEN2LXJLTVS                           #${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: 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   #${{ secrets.AWS_SECRET_ACCESS_KEY }}
