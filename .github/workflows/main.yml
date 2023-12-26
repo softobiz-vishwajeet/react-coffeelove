@@ -1,30 +1,34 @@
-name: Mirror GitHub To CodeCommit
+name: Mirror GitHub to CodeCommit
 
 on:
   push:
-    tags-ignore:
-      - '*'
     branches:
       - main
 
 jobs:
-  sync:
+  mirror:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    - name: Checkout
+      uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: AKIAZMKFPOEN2LXJLTVS #${{ secrets.TEST_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: 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 #${{ secrets.TEST_AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
+    - name: Install required packages
+      run: sudo apt-get install -y gridsite-clients
 
-      - name: Sync up to CodeCommit
-        uses: tsgit18/sync-up-to-codecommit-action@v1
-        with:
-          repository_name: poc-repo
-          aws_region: ap-south-1
+    - name: Mirror repository
+      run: |
+        git clone --mirror https://${{ secrets.AZURE_GIT_USERNAME }}@${{ secrets.AZURE_REPO_URL }} repo-mirror
+        cd repo-mirror
+        git remote set-url --push origin https://${{ secrets.AWS_GIT_USERNAME }}:${{ secrets.AWS_GIT_PASSWORD }}@${{ secrets.AWS_REPO_URL }}
+        git push --mirror origin
+      env:
+        AZURE_REPO_URL: github.com/softobiz-vishwajeet/react-coffeelove.git   #${{ secrets.AZURE_REPO_URL }}
+        AZURE_GIT_USERNAME: softobiz-vishwajeet                             # ${{ secrets.AZURE_GIT_USERNAME }}
+        #AZURE_GIT_PASSWORD: ${{ secrets.AZURE_GIT_PASSWORD }}
+        AWS_REPO_URL: git-codecommit.ap-south-1.amazonaws.com/v1/repos/poc-repo #${{ secrets.AWS_REPO_URL }}
+        AWS_GIT_USERNAME: test-user-at-644927680795                      #${{ secrets.AWS_GIT_USERNAME }}
+        AWS_GIT_PASSWORD: G2XMvO2t4AhgtGRk7O2t0FfV6mNCgGm6wG8O5ehO6qk=  #${{ secrets.AWS_GIT_PASSWORD }}
+
+
+
