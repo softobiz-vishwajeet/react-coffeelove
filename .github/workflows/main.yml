@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1.0.3
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: AKIAZMKFPOEN2LXJLTVS #${{ secrets.TEST_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: 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 #${{ secrets.TEST_AWS_SECRET_ACCESS_KEY }}
