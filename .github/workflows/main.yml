@@ -30,16 +30,24 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+          
+      - name: Remove node_modules and package-lock.json
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+
+
       - name: Install Dependencies
         run: |
-          sudo npm cache clean -f
-          sudo npm install -g n
-          sudo n latest
-          sudo rm -rf node_modules package-lock.json
-          sudo npm install
+          npm install
+          # sudo npm cache clean -f
+          # sudo npm install -g n
+          # sudo n latest
+          # sudo rm -rf node_modules package-lock.json
+          # sudo npm install
 
       - name: Build Amplify App
-        run: npm run build
+        run: npm run-script build
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
