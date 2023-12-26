@@ -1,28 +1,30 @@
-name: Mirror to CodeCommit
+name: Mirror GitHub To CodeCommit
 
 on:
   push:
+    tags-ignore:
+      - '*'
     branches:
-      - main  # Adjust this based on your repository's branch structure
+      - main
 
 jobs:
-  mirror:
+  sync:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-    - name: Configure AWS CLI
-      run: |
-        aws configure set aws_access_key_id AKIAZMKFPOEN2LXJLTVS
-        aws configure set aws_secret_access_key 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
-        aws configure set region ap-south-1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1.0.3
+        with:
+          aws-access-key-id: AKIAZMKFPOEN2LXJLTVS #${{ secrets.TEST_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: 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 #${{ secrets.TEST_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
 
-    - name: Mirror to CodeCommit
-      run: |
-        # Replace <REPO_URL> with your CodeCommit repository URL
-        git clone https://github.com/softobiz-vishwajeet/react-coffeelove.git
-        cd react-coffeelove
-        git remote add codecommit https://git-codecommit.ap-south-1.amazonaws.com/v1/repos/poc-repo
-        git push --mirror codecommit
+      - name: Sync up to CodeCommit
+        uses: tsgit18/sync-up-to-codecommit-action@v1
+        with:
+          repository_name: poc-repo
+          aws_region: ap-south-1
