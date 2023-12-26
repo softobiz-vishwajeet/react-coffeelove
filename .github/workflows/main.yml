@@ -32,11 +32,11 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm cache clean -f
-          npm install -g n
-          n latest
-          rm -rf node_modules package-lock.json
-          npm install
+          sudo npm cache clean -f
+          sudo npm install -g n
+          sudo n latest
+          sudo rm -rf node_modules package-lock.json
+          sudo npm install
 
       - name: Build Amplify App
         run: npm run build
